@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kannada - Latin Transliterator</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+</head>
+<body>
+    <h1>Kannada - Latin Transliterator</h1>
+
+    <label for="transliterationType">Select Transliteration Type:</label>
+    <select id="transliterationType">
+        <option value="kn_to_lat">Kannada to Latin</option>
+        <option value="lat_to_kn">Latin to Kannada</option>
+    </select>
+
+    <textarea id="inputText" placeholder="Enter text..."></textarea>
+    <br><br>
+    <button onclick="transliterate()">Transliterate</button>
+    <h2>Output:</h2>
+    <p id="outputText"></p>
+
+    <script src="script.js"></script> <!-- Link to external JavaScript file -->
+</body>
+</html>

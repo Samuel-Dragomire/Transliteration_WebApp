@@ -1,0 +1,62 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from indic_transliteration.sanscript import transliterate, KANNADA, IAST, KOLKATA
+import re
+
+app = Flask(__name__)
+CORS(app)  # Enable CORS
+
+# Define the replacements for Latin to Kannada transliteration
+replacements = [
+    ('A', 'ā'), ('aa', 'ā'), ('I', 'ī'), ('ee', 'ī'), ('U', 'ū'),
+    ('Ru', 'r̥'), ('oo', 'ū'), ('E', 'ē'), ('O', 'ō'), ('T', 'ṭ'),
+    ('Th', 'ṭh'), ('D', 'ḍ'), ('Dh', 'ḍ'), ('N', 'ṇ'), ('sh', 'ś'),
+    ('S', 'ś'), ('Sh', 'ṣ'), ('L', 'ḷ'), ("ae", "e್"), ("ch", "c")
+]
+
+pattern = r'([aeiouAEIOU])([nNmM])([bcdfghjklpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])'
+
+def replace_nm(text):
+    return re.sub(pattern, r'\1ṃ\3', text)
+
+def replace_zero_with_n(text):
+    # Replace all instances of '0' with 'ṃ' and 'l̤' with 'ḷ' in the text
+    text = text.replace('0', 'ṃ')  # Replace '0' with 'ṃ'
+    text = text.replace('l̤', 'ḷ')  # Replace 'l̤' with 'ḷ'
+    return text
+
+def apply_replacements(text):
+    for old, new in replacements:
+        text = text.replace(old, new)
+    text = re.sub(pattern, r'\1ṃ\3', text)
+    return text
+
+
+def reverse_replacements(text):
+    for old, new in replacements:
+        text = text.replace(new, old)
+    return text
+
+@app.route('/transliterate', methods=['POST'])
+def transliterate_text():
+    data = request.json
+    text = data.get('text')
+    transliteration_type = data.get('type')
+
+    if transliteration_type == 'kn_to_lat':
+        text = transliterate(text, KANNADA, KOLKATA)
+        transliterated_text = replace_zero_with_n(text)
+    elif transliteration_type == 'lat_to_kn':
+        # Apply the custom replacements
+        text_with_replacements = apply_replacements(text)
+        # Then transliterate the modified text using the KOLKATA scheme
+        transliterated_text = transliterate(text_with_replacements, KOLKATA, KANNADA)
+    else:
+        transliterated_text = 'Invalid transliteration type'
+
+    return jsonify({'transliterated_text': transliterated_text})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
