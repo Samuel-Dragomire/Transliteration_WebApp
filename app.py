@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from indic_transliteration.sanscript import transliterate, KANNADA, IAST, KOLKATA
+from indic_transliteration.sanscript import transliterate, KANNADA, MALAYALAM, IAST, KOLKATA
 import re
 
 app = Flask(__name__)
@@ -9,9 +9,9 @@ CORS(app)  # Enable CORS
 # Define the replacements for Latin to Kannada transliteration
 replacements = [
     ('A', 'ā'), ('aa', 'ā'), ('I', 'ī'), ('ee', 'ī'), ('U', 'ū'),
-    ('Ru', 'r̥'), ('oo', 'ū'), ('E', 'ē'), ('O', 'ō'), ('T', 'ṭ'),
+    ('Ru', 'r̥'), ('oo', 'ū'), ('E', 'ē'), ('O', 'ō'), ('th', 't'), ('T', 'ṭ'),
     ('Th', 'ṭh'), ('D', 'ḍ'), ('Dh', 'ḍ'), ('N', 'ṇ'), ('sh', 'ś'),
-    ('S', 'ś'), ('Sh', 'ṣ'), ('L', 'ḷ'), ("ae", "e್"), ("ch", "c")
+    ('S', 'ś'), ('Sh', 'ṣ'), ('L', 'ḷ'), ("ae", "e್"), ("ch", "c"), ('ou', 'au'), ('x', 'ks'), ('w', 'v')
 ]
 
 pattern = r'([aeiouAEIOU])([nNmM])([bcdfghjklpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])'
@@ -46,11 +46,21 @@ def transliterate_text():
     if transliteration_type == 'kn_to_lat':
         text = transliterate(text, KANNADA, KOLKATA)
         transliterated_text = replace_zero_with_n(text)
+    elif transliteration_type == 'kn_to_tu':
+        transliterated_text = transliterate(text, KANNADA, MALAYALAM)
     elif transliteration_type == 'lat_to_kn':
         # Apply the custom replacements
         text_with_replacements = apply_replacements(text)
         # Then transliterate the modified text using the KOLKATA scheme
         transliterated_text = transliterate(text_with_replacements, KOLKATA, KANNADA)
+    elif transliteration_type == 'lat_to_tu':
+        text_with_replacements = apply_replacements(text)
+        transliterated_text = transliterate(text_with_replacements, KOLKATA, MALAYALAM)
+    elif transliteration_type == 'tu_to_kn':
+        transliterated_text = transliterate(text, MALAYALAM, KANNADA)
+    elif transliteration_type == 'tu_to_lat':
+        text = transliterate(text, MALAYALAM, KOLKATA)
+        transliterated_text = replace_zero_with_n(text)
     else:
         transliterated_text = 'Invalid transliteration type'
 

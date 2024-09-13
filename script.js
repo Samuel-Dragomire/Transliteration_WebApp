@@ -14,3 +14,17 @@ async function transliterate() {
     document.getElementById('outputText').innerText = result.transliterated_text;
 }
 
+window.onload = function() {
+    let textarea = document.getElementById('inputText');
+    let placeholders = ["enter text / baravun pADle...", "ಎಂಟೆರ್ ತೆಕ್ಸ್ತ್ / ಬರವುನ್ ಪಾಡ್ಲೆ..."];
+    let index = 0;
+
+    // Function to cycle placeholder text
+    function changePlaceholder() {
+        textarea.placeholder = placeholders[index];
+        index = (index + 1) % placeholders.length; // Cycle between 0 and 1
+    }
+
+    // Change placeholder every how many seconds
+    setInterval(changePlaceholder, 2000);
+};

@@ -3,24 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kannada - Latin Transliterator</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+    <title>Kannada - Latin - Tulu Transliterator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Kannada - Latin Transliterator</h1>
+    <div class="container">
+        <h1>Kannada-Latin-Tulu Transliterator</h1>
+        <h3>switching between these three scripts</h3>
 
-    <label for="transliterationType">Select Transliteration Type:</label>
-    <select id="transliterationType">
-        <option value="kn_to_lat">Kannada to Latin</option>
-        <option value="lat_to_kn">Latin to Kannada</option>
-    </select>
+        <label for="transliterationType">Select Transliteration Type:</label>
+        <select id="transliterationType">
+            <option value="kn_to_lat">Kannada(ಕ) to Latin</option>
+            <option value="kn_to_tu">Kannada(ಕ) to Tulu(തു)</option>
+            <option value="lat_to_kn">Latin to Kannada(ಕ)</option>
+            <option value="lat_to_tu">Latin to Tulu(തു)</option>
+            <option value="tu_to_lat">Tulu(തു) to Latin</option>
+            <option value="tu_to_kn">Tulu(തു) to Kannada(ಕ)</option>
+            
+        </select>
 
-    <textarea id="inputText" placeholder="Enter text..."></textarea>
-    <br><br>
-    <button onclick="transliterate()">Transliterate</button>
-    <h2>Output:</h2>
-    <p id="outputText"></p>
+        <textarea id="inputText" placeholder="enter text..."></textarea>
+        <button onclick="transliterate()">Transliterate</button>
 
-    <script src="script.js"></script> <!-- Link to external JavaScript file -->
+        <h2>Output:</h2>
+        <p id="outputText"></p>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
